@@ -21,9 +21,6 @@ function LandingComp() {
   // const setBack = useSetRecoilState(back)
   const setSubmit = useSetRecoilState(submit)
 
-const level = ["Easy","medium", "hard"];
-
-const quizType = ["multiple choice", "true / False"]
 
   function handleSkip() {
     setISSkipped(true)
@@ -59,11 +56,11 @@ const quizType = ["multiple choice", "true / False"]
 
   return (
     <div className="min-h-screen flex justify-center flex-col w-full m-2 p-2 mt-5">
-      <div className="flex justify-center flex-col bg-slate-200">
+      <div className="flex justify-center flex-col sm:bg-slate-200 w-full">
         <div className="flex sm:flex-col justify-between m-2 p-2 flex-col">
 
        <div>
-       <div className="bg-white flex sm:m-2 sm:p-2 m-1 rounded">
+       <div className="flex sm:m-2 sm:p-2 m-1 sm:bg-white bg-slate-200  rounded">
       <p className="mt-2">Catagory</p>
         <SvgIcon onClick={(e) =>{
            e.stopPropagation();
@@ -75,7 +72,7 @@ const quizType = ["multiple choice", "true / False"]
         </div>
 
        </div>
-        <div className="bg-white flex sm:m-2 sm:p-2 m-1 rounded">
+        <div className="sm:bg-white bg-slate-200 flex sm:m-2 sm:p-2 m-1 rounded">
       <p className="mt-2">Level</p>
         <SvgIcon onClick={(e) => {
           e.stopPropagation();
@@ -83,10 +80,10 @@ const quizType = ["multiple choice", "true / False"]
           setShowCatagory(false); // Close other components when one is opened
           setShowType(false);  // Close other components when one is opened
           }}/>
-          <LevelComp level={level} isTrue={showLevel}/>
+          <LevelComp isTrue={showLevel}/>
         </div>
 
-        <div className="bg-white flex sm:m-2 sm:p-2 m-1 rounded">
+        <div className="sm:bg-white bg-slate-200 flex sm:m-2 sm:p-2 m-1 rounded">
       <p className="mt-2">Types</p>
         <SvgIcon onClick={(e)=>{
           e.stopPropagation();
@@ -94,9 +91,9 @@ const quizType = ["multiple choice", "true / False"]
           setShowCatagory(false); // Close other components when one is opened
           setShowLevel(false);  // Close other components when one is opened
           }}/>
-          <TypeComp types={quizType} isTrue={showType}/>
+          <TypeComp isTrue={showType}/>
         </div>
-          <div>
+          <div className="mt-2">
             <Button type ={"button"} buttonFor={"Filter"} onClick={()=>{
               setFilter(true)
             }} colour={"bg-green-800"} isClicked={false}/>
@@ -105,7 +102,7 @@ const quizType = ["multiple choice", "true / False"]
 
         <div className="flex-grow m-2 p-2 mr-6">
 
-          <div className=" sm:min-h-[200px] w-full bg-white text-black rounded m-2 p-2">
+          <div className=" sm:min-h-[200px] bg-white text-black rounded p-2">
          <div><QuestionComp /></div>
 
            

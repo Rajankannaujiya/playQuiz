@@ -134,8 +134,6 @@ export const middleware = async(req,res,next)=>{
       // Extract token from authorization header
       const token = req.headers['authorization'];
 
-
-
     if (!token) {
         res.status(401).json({ error: "Unauthorized" });
         return;

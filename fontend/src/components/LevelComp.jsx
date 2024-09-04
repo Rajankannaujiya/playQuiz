@@ -2,19 +2,18 @@ import PropTypes from 'prop-types';
 import { useRecoilState } from 'recoil';
 import { getLevel } from '../recoil';
 
-export function LevelComp({ level , isTrue}) {
+export function LevelComp({ isTrue}) {
 
 
   const [selectLevel, setSelectLevel] = useRecoilState(getLevel)
 
+  const level = ["easy","medium", "hard"];
 
-  function handleCheckboxChange (value){
-    setSelectLevel(value)
-  }
 
-  console.log(selectLevel)
+  const handleCheckboxChange = (value) => {
+    setSelectLevel(value);
+  };
 
-    console.log(isTrue)
     return (
 isTrue  &&  (<div   className="fixed z-50 w-full sm:w-72 max-h-96 overflow-y-auto bg-white p-4 rounded shadow-lg" >
         <div className="row justify-content-center">

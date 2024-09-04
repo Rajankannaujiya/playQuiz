@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { BACKEND_URL } from "../BackendUrl.js"
 import { useSetRecoilState } from "recoil"
-import { isSigninStatus } from "../recoil.js"
+import { isSignin } from "../recoil.js"
 
 
 
@@ -18,7 +18,7 @@ function SignupComp() {
   
   const navigate =useNavigate()
   
- const setSignInStatus = useSetRecoilState(isSigninStatus)
+ const setSignInStatus = useSetRecoilState(isSignin)
 
   const [isClicked, setIsClicked] = useState(false)
   const [user, setUser] = useState({

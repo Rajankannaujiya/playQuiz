@@ -4,16 +4,17 @@ import PropTypes from 'prop-types'
 import { useRecoilState } from 'recoil';
 import { getType } from '../recoil';
 
-export function TypeComp({ types , isTrue}) {
 
+export function TypeComp( {isTrue}) {
+
+
+const types = ["multiple choice", "true / False"]
 
   const [quizTypes, setQuizTypes] = useRecoilState(getType)
 
   console.log(quizTypes)
 
   function handleCheckboxChange (value){
-
-
     if(value === "multiple choice"){
       setQuizTypes("multiple")
     }
@@ -56,6 +57,5 @@ isTrue  &&  (<div   className="fixed z-50 w-full sm:w-72 max-h-96 overflow-y-aut
 
 
     TypeComp.propTypes = {
-      types: PropTypes.array.isRequired,
     isTrue: PropTypes.bool.isRequired,
   };

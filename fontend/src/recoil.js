@@ -73,37 +73,58 @@ export const quizQuestionSelector=  selector({
     get:async({get})=>{
         get(quizQuestionsAtom)
         const categoryId = get(getCatagoryId);
-        const level = get(getLevel);
+        const difficulty = get(getLevel);
         const type = get(getType);
         const isFilered =get(filer)
 
         try {
-
-            if(categoryId && level && type && isFilered){
-                const response = await axios.get(`${BACKEND_URL}/api/v1/quiz/questions/${categoryId}/${level}`);
+        
+            if(!categoryId && !difficulty && !type){
+                const response = await axios.get(`${BACKEND_URL}/api/v1/quiz`);
+                console.log(response.data.questions);
+                return [...response.data.questions]
+            }
+            // works fine
+            if(categoryId && difficulty && type&& isFilered){
+                const response = await axios.get(`${BACKEND_URL}/api/v1/quiz/questions/${categoryId}/${difficulty}/${type}`);
                 console.log(response.data)
-                return response.data   
+                return [...response.data.questions]
+            }
+                // works fine
+            else if(categoryId && difficulty && isFilered){
+                const response = await axios.get(`${BACKEND_URL}/api/v1/quiz/questions/catagory/:${categoryId}/difficulty/${difficulty}`);
+                console.log("this is the questions with catagory",response.data.questions)
+                return [...response.data.questions]
             }
 
-            else if(categoryId && level && isFilered){
-                const response = await axios.get(`${BACKEND_URL}/api/v1/quiz/questions/${categoryId}/${level}`);
-                console.log(response.data)
-                return response.data
+            else if(categoryId && type  && isFilered){
+                const response = await axios.get(`${BACKEND_URL}/api/v1/quiz/questions/catagory/${categoryId}/type/${type}`);
+                console.log("this is the questions with catagory",response.data.questions)
+                return [...response.data.questions]
             }
 
+            else if(difficulty && type&& isFilered){
+                const response = await axios.get(`${BACKEND_URL}/api/v1/quiz/questions/difficulty/${difficulty}/type/${type}`);
+                console.log("this is the questions with catagory",response.data.questions)
+                return [...response.data.questions]
+            }
+            // works fine
             else if(categoryId && isFilered){
                 const response = await axios.get(`${BACKEND_URL}/api/v1/quiz/questions/${categoryId}`);
-                console.log(response.data.questions)
-                return response.data.questions
+                return [...response.data.questions]
             }
-            
-            else{
-                const response = await axios.get(`${BACKEND_URL}/api/v1/quiz`)
 
-                console.log(response.data.questions);
-    
-                return response.data.questions;
+            else if(difficulty && isFilered){
+                const response = await axios.get(`${BACKEND_URL}/api/v1/quiz/questions/difficulty/${difficulty}`);
+                return [...response.data.questions]
             }
+
+            else if(type && isFilered){
+                const response = await axios.get(`${BACKEND_URL}/api/v1/quiz/questions/type/${type}`);
+                return [...response.data.questions]
+            }
+
+          
 
         } catch (error) {
             console.log("an error occurred while fetching questions",error);
@@ -136,59 +157,19 @@ export const CatagoryAtom = atom({
 })
 
 
+export const isSignin = atom({
+    key:"isSignInAtom",
+    default:false
+})
 
-// export const sortByCatagory = atomFamily({
-//     key:"sortByCatagoryAtom",
-//     default:selectorFamily({
-//         key:"sortByCatagorySelector",
-//         get: (id)=>async ({get}) =>{
-//           try {
-//               get(quizQuestionsAtom)
-//               const response = await axios.get(`${BACKEND_URL}/api/v1/quiz/questions/${id}`);
-//               console.log(response.data)
-//               return response.data
-//           } catch (error) {
-//             console.log("an error occurred while fetching questions",error);
-//             throw new Error("an error")
-//           }
-//         }
-//     })
-// })
-
-// export const sortByCatagoryAndLevel = atom({
-//     key:"sortByCatagoryAndLevelAtom",
-//     default:selector({
-//         key:'sortByCatagoryAndLevelSelector',
-//         get:(id,level)=>async({get})=>{
-//             try {
-//                 get(quizQuestionsAtom)
-//                 const response = await axios.get(`${BACKEND_URL}/api/v1/quiz/questions/${id}/${level}`);
-//                 console.log(response.data)
-//                 return response.data
-//             } catch (error) {
-//                 console.log("an error occurred while fetching questions",error);
-//                 throw new Error("error")
-//             }
-//         }
-//     })
-// })
-
-
-// export const sortByCatagoryLevelAndTypes = atom({
-//     key:"sortByCatagoryLevelAndTypesAtom",
-//     default:selector({
-//         key:'sortByCatagoryLevelAndTypesSelector',
-//         get:(id,level,type)=>async({get})=>{
-//             try {
-//                 get(quizQuestionsAtom)
-//                 const response = await axios.get(`${BACKEND_URL}/api/v1/quiz/questions/${id}/${level}/${type}`);
-//                 console.log(response.data)
-//                 return response.data
-//             } catch (error) {
-//                 console.log("an error occurred while fetching questions",error);
-//                 throw new Error("error")
-//             }
-//         }
-//     })
-// })
-
+export const isAuthenticated = selector({
+    key: "checkUserTokenSelector",
+    get: ({ get }) => {
+        get(isSignin)
+        const token = localStorage.getItem("token");
+        if (!token || token === 'undefined') {
+            return false; // User is not authenticated
+        }
+        return true; // User is authenticated
+    },
+});

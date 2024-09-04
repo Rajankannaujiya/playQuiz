@@ -11,6 +11,7 @@ function Alert(textColor,alertType,alertContent) {
 }
 
 Alert.propTypes = {
+  textColor:PropTypes.string,
   alertType: PropTypes.string,
   alertContent: PropTypes.string,
 };

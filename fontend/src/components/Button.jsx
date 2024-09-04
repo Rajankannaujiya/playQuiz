@@ -20,12 +20,12 @@ function Button({type,onClick,buttonFor,colour,isClicked}) {
   )
 }
 
-Button.prototype={
-  type:PropTypes.string,
-  onClick:PropTypes.func,
-  buttonFor:PropTypes.string,
-  colour:PropTypes.string,
-  isClicked:PropTypes.string
-}
+Button.propTypes = {
+  type: PropTypes.oneOf(['button', 'submit', 'reset']),
+  onClick: PropTypes.func.isRequired,
+  buttonFor: PropTypes.string.isRequired,
+  colour: PropTypes.string,
+  isClicked: PropTypes.bool,
+};
 
 export default Button

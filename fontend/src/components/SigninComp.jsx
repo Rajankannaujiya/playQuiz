@@ -9,13 +9,13 @@ import { useNavigate } from "react-router-dom"
 import Alert from "./Alert.jsx"
 import { useState } from "react"
 import { useSetRecoilState } from "recoil"
-import { isSigninStatus } from "../recoil.js"
+import { isSignin } from "../recoil.js"
 
 
 function Signincomp() {
 
   const navigate =useNavigate()
-  const setSignInStatus = useSetRecoilState(isSigninStatus)
+  const setSignInStatus = useSetRecoilState(isSignin)
 
   const [user, setUser] = useState({
     email: "",
@@ -69,6 +69,7 @@ function Signincomp() {
   return (
     <div className="h-screen flex justify-center items-center">
            <div className="flex justify-between max-w-md w-full flex-col p-2 ">
+  
       <div className="m-1 p-1">
           <Header mainHeader="Login to your Account" subHeader="Don't have an Account?" linkto="/" linkfor="Signup"/>
         </div>

@@ -10,7 +10,6 @@ function QuestionComp() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const[optionArray, setOptionArray] = useState([])
   const [ansClicked, setAnswerClicked] = useState(null);
-  // const [delayPassed, setDelayPassed] = useState(false);
   const { state, contents } = useRecoilValueLoadable(quizQuestionSelector);
 
   const [isSkipped,setISSkipped] = useRecoilState(skip);
@@ -23,12 +22,19 @@ function QuestionComp() {
 
 
   useEffect(() => {
+
     if (state === "hasValue") {
-      setCurrentQuestionIndex(0);
-      setQuestion(contents)
-      setIsFiltered(false)
+  
+      // Check if contents is an array or has the expected structure
+      if (Array.isArray(contents)) {
+        setQuestion(contents);
+        setIsFiltered(false);
+      } else {
+        console.error("Contents is not an array or is undefined");
+      }
     }
-  }, [state, contents, isFiltered]);
+  }, [state, contents, isFiltered, setIsFiltered]);
+
 
   useEffect(() => {
     if (isSkipped || isSubmitted) {
@@ -43,13 +49,13 @@ function QuestionComp() {
       return () => clearTimeout(countdownTimer)
       ; // Cleanup the timeout to avoid memory leaks
     }
-  }, [count, isSkipped, isSubmitted]);
+  }, [count,isSkipped, isSubmitted]);
 
 
   // for displaying the question one by one
   
   useEffect(() => {
-    if (question.length > 0 && currentQuestionIndex < question.length) {
+    if (question &&question.length > 0 && currentQuestionIndex < question.length) {
       const questionTimer = setInterval(() => {
         setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
         setCount(60); // Reset count every time a new question is shown
@@ -67,16 +73,21 @@ function QuestionComp() {
   
 
   
-      return () => clearInterval(questionTimer); // Clear interval on component unmount or re-render
+      return () => {
+        clearInterval(questionTimer);
+      }
+      ; // Clear interval on component unmount or re-render
     }
   }, [question, currentQuestionIndex, isSkipped, isSubmitted]);
   
   
 
-const singleQuestion = question[currentQuestionIndex];
-const correctAnswer = singleQuestion?.correct_answer
-const incorrectAnswer = singleQuestion?.incorrect_answers || []
+  const singleQuestion = Array.isArray(question) && currentQuestionIndex >= 0 && currentQuestionIndex < question.length
+  ? question[currentQuestionIndex]
+  : null;
 
+const correctAnswer = singleQuestion?.correct_answer;
+const incorrectAnswer = singleQuestion?.incorrect_answers || [];
 
 // to make the options Randomly available and using UseEffect because the page was rerendering due to change of count value every second so the options were changing every second.
 useEffect(()=>{
@@ -97,12 +108,12 @@ useEffect(()=>{
 
 
   return (
-    <div className="flex justify-between items-center p-2 text-black flex-col">
-        <div className="flex justify-center">
-        {currentQuestionIndex <question.length ?<p className="bg-slate-500 p-2 m-2 text-white rounded">Question:{currentQuestionIndex+1}/10</p> : ""
+    <div className="flex justify-between items-center p-2 text-black flex-col w-full">
+        <div className="flex justify-center flex-col sm:flex-row">
+        {question && currentQuestionIndex <question.length ?<p className="bg-slate-500 p-2 m-2 text-white rounded">Question:{currentQuestionIndex+1}/10</p> : ""
         }
-            {currentQuestionIndex <question.length ?<p className="bg-red-500 p-2 m-2 text-white rounded">RemainingTime:{count}</p>:""}
-           {currentQuestionIndex <question.length ? <p className="bg-green-700 p-2 m-2 text-white rounded">Score:{showScore}</p>: ""}
+            {question && currentQuestionIndex <question.length ?<p className="bg-red-500 p-2 m-2 text-white rounded">RemainingTime:{count}</p>:""}
+           {question && currentQuestionIndex <question.length ? <p className="bg-green-700 p-2 m-2 text-white rounded">Score:{showScore}</p>: ""}
           </div>
     {singleQuestion ? (
       <div key={currentQuestionIndex}>
@@ -123,7 +134,7 @@ useEffect(()=>{
       </div>
       </div>
     ) : 
-    currentQuestionIndex >question.length -1 ? (<div className="flex justify-center items-center font-semibold">Your Score is {showScore}</div>): (
+   question && currentQuestionIndex >question.length -1 ? (<div className="flex justify-center items-center font-semibold">Your Score is {showScore}</div>): (
       <div> <Spinner /></div>
     )}
   </div>
